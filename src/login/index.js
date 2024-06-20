@@ -2,29 +2,30 @@
 import './index.css';
 import { useState } from 'react';
 import { login } from './utils';
-const Login=()=>{
- 
+import { Introduction } from '../App';
+
+const Login=({setIsLoggedIn})=>{
     const [username,setUserName]=useState('');
     const [password, setPassword]=useState('');
-    console.log({username});
+    const [openModel,setModalIsOpen]=useState(false);
+    // console.log({username});
   
 
     const handleLogin=async(event)=>{
      event.preventDefault();
-     try{
-  
         const result=await login({username,password});
         console.log({result});
-     }
-     catch(error){
-        console.log(`Error while login:${error.message}`);
-     }
+        if(result.token){
+            localStorage.setItem('token',result.token)
+            setIsLoggedIn(true)
+            setModalIsOpen(false)
+        }
     };
 
     return(
         <div>
-<form onSubmit={handleLogin}>
-
+            <Introduction setModalIsOpen={setModalIsOpen}/>
+            {openModel && <form onSubmit={handleLogin}>,
     <h2>Login</h2>
     <input placeholder="Enter username" type="text" onChange={(event)=>setUserName(event.target.value)}/>
     <br/>
@@ -32,7 +33,7 @@ const Login=()=>{
     <br/>
     <button type="submit">Login</button>
    
-</form>
+</form>}
         </div>
     )
 }
